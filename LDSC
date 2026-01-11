@@ -1,0 +1,187 @@
+# ldsc 
+# install.packages("devtools")
+# library(devtools)
+# library(R.utils)
+# devtools::install_github("mglev1n/ldscr")
+library(ldscr)
+library(vroom)
+
+# genetic correlations between and biological aging and PE----------------
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/PE_gwas.txt"
+PE_gwas <- vroom(path, col_names = TRUE)
+# PE and biological aging acceleration
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/BA_gwas.txt"
+BA_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(PE_gwas,BA_gwas), ancestry = "EUR")
+BA_h2 <- rg_res$h2
+BA_rg <- rg_res$rg
+
+# PE and CHIP
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/CHIP_gwas.txt"
+CHIP_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(PE_gwas,CHIP_gwas), ancestry = "EUR")
+CHIP_h2 <- rg_res$h2
+CHIP_rg <- rg_res$rg
+
+# PE and EEAA_gwas
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/EEAA_gwas.txt"
+EEAA_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(PE_gwas,EEAA_gwas), ancestry = "EUR")
+EEAA_h2 <- rg_res$h2
+EEAA_rg <- rg_res$rg
+
+# PE and FA
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/FA_gwas.txt"
+FA_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(PE_gwas,FA_gwas), ancestry = "EUR")
+FA_h2 <- rg_res$h2
+FA_rg <- rg_res$rg
+
+# PE and FI
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/FI_gwas.txt"
+FI_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(PE_gwas,FI_gwas), ancestry = "EUR")
+FI_h2 <- rg_res$h2
+FI_rg <- rg_res$rg
+
+# PE and IEAA
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/IEAA_gwas.txt"
+IEAA_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(PE_gwas,IEAA_gwas), ancestry = "EUR")
+IEAA_h2 <- rg_res$h2
+IEAA_rg <- rg_res$rg
+
+# PE and PA
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/PA_gwas.txt"
+PA_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(PE_gwas,PA_gwas), ancestry = "EUR")
+PA_h2 <- rg_res$h2
+PA_rg <- rg_res$rg
+
+# PE and TL
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/TL_gwas.txt"
+TL_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(PE_gwas,TL_gwas), ancestry = "EUR")
+TL_h2 <- rg_res$h2
+TL_rg <- rg_res$rg
+
+PE_aging_h2 <- rbind(BA_h2,CHIP_h2,EEAA_h2,FA_h2,FI_h2,
+                     IEAA_h2,PA_h2,TL_h2)
+PE_aging_h2 <- unique(PE_aging_h2)
+PE_aging_h2 <- cbind(trait=c("PE","BA","CHIP","EEAA","FA","FI",
+                             "IEAA","PA","TL"), PE_aging_h2)
+
+PE_aging_corr <- rbind(BA_rg,CHIP_rg,EEAA_rg,FA_rg,FI_rg,
+                       IEAA_rg,PA_rg,TL_rg)
+PE_aging_corr$trait1 <- "PE"
+PE_aging_corr$trait2 <- c("BA","CHIP","EEAA","FA","FI","IEAA","PA","TL")
+
+write.csv(PE_aging_h2,
+          file="F:/research/aging_PE_GTN/analysis_results/table/PE_aging_h2.csv",
+          quote = FALSE, row.names = FALSE)
+write.csv(PE_aging_corr,
+          file="F:/research/aging_PE_GTN/analysis_results/table/PE_aging_corr.csv",
+          quote = FALSE, row.names = FALSE)
+
+
+# genetic correlations between and biological aging and GH-------------------
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/GH_gwas.txt"
+GH_gwas <- vroom(path, col_names = TRUE)
+# GH and BA
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/BA_gwas.txt"
+BA_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(GH_gwas,BA_gwas), ancestry = "EUR")
+BA_h2 <- rg_res$h2
+BA_rg <- rg_res$rg
+
+# GH and CHIP
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/CHIP_gwas.txt"
+CHIP_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(GH_gwas,CHIP_gwas), ancestry = "EUR")
+CHIP_h2 <- rg_res$h2
+CHIP_rg <- rg_res$rg
+
+# GH and EEAA
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/EEAA_gwas.txt"
+EEAA_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(GH_gwas,EEAA_gwas), ancestry = "EUR")
+EEAA_h2 <- rg_res$h2
+EEAA_rg <- rg_res$rg
+
+# GH and FA
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/FA_gwas.txt"
+FA_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(GH_gwas,FA_gwas), ancestry = "EUR")
+FA_h2 <- rg_res$h2
+FA_rg <- rg_res$rg
+
+# GH and FI
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/FI_gwas.txt"
+FI_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(GH_gwas,FI_gwas), ancestry = "EUR")
+FI_h2 <- rg_res$h2
+FI_rg <- rg_res$rg
+
+# GH and IEAA
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/IEAA_gwas.txt"
+IEAA_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(GH_gwas,IEAA_gwas), ancestry = "EUR")
+IEAA_h2 <- rg_res$h2
+IEAA_rg <- rg_res$rg
+remove(list = setdiff(ls(), c("GH_gwas","BA_h2","BA_rg","CHIP_h2",
+                              "CHIP_rg","EEAA_h2","EEAA_rg","FA_h2",
+                              "FA_rg","FI_h2","FI_rg","IEAA_h2",
+                              "IEAA_rg")))
+gc();gc();gc()
+# GH and PA
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/PA_gwas.txt"
+PA_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(GH_gwas,PA_gwas), ancestry = "EUR")
+PA_h2 <- rg_res$h2
+PA_rg <- rg_res$rg
+remove(list = setdiff(ls(), c("GH_gwas","BA_h2","BA_rg","CHIP_h2",
+                              "CHIP_rg","EEAA_h2","EEAA_rg","FA_h2",
+                              "FA_rg","FI_h2","FI_rg","IEAA_h2",
+                              "IEAA_rg","PA_h2","PA_rg")))
+gc();gc();gc()
+# GH and TL
+path <- "F:/research/aging_PE_GTN/genetic_correlation_data/TL_gwas.txt"
+TL_gwas <- vroom(path, col_names = TRUE)
+rg_res <- ldsc_rg(
+  munged_sumstats = list(GH_gwas,TL_gwas), ancestry = "EUR")
+TL_h2 <- rg_res$h2
+TL_rg <- rg_res$rg
+
+GH_aging_h2 <- rbind(BA_h2,CHIP_h2,EEAA_h2,FA_h2,FI_h2,
+                     IEAA_h2,PA_h2,TL_h2)
+GH_aging_h2 <- unique(GH_aging_h2)
+GH_aging_h2 <- cbind(trait=c("GH","BA","CHIP","EEAA","FA","FI",
+                             "IEAA","PA","TL"), GH_aging_h2)
+
+GH_aging_corr <- rbind(BA_rg,CHIP_rg,EEAA_rg,FA_rg,FI_rg,
+                       IEAA_rg,PA_rg,TL_rg)
+GH_aging_corr$trait1 <- "GH"
+GH_aging_corr$trait2 <- c("BA","CHIP","EEAA","FA","FI","IEAA","PA","TL")
+
+write.csv(GH_aging_h2,
+          file="F:/research/aging_PE_GTN/analysis_results/table/GH_aging_h2.csv",
+          quote = FALSE, row.names = FALSE)
+write.csv(GH_aging_corr,
+          file="F:/research/aging_PE_GTN/analysis_results/table/GH_aging_corr.csv",
+          quote = FALSE, row.names = FALSE)
+
