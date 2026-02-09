@@ -1,4 +1,3 @@
-
 # Pre-processing exposure data
 ### Convert the format of exposure data, for example, vcf to txt etc.
 ### Change the variable name of exposed data to a unified ones.
