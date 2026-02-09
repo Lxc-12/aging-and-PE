@@ -5,13 +5,13 @@ library(vcfR)
 library(tidyr)
 library(dplyr)
 library(vroom)
-#** Pre-processing telomere length (TL) GWAS data
+
+#**Pre-processing telomere length (TL) GWAS data**
 path <- ("F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\Telomere_length\\ieu-b-4879.vcf.gz")
 TL_vcf <- read.vcfR(path, verbose = FALSE )
 
 fix <- data.frame(TL_vcf@fix)
 gt <- data.frame(TL_vcf@gt)
-
 gt_sep <- separate(gt, "ieu.b.4879", into = c("ES","SE","LP","AF","rsID"),
                    sep = ":", remove = TRUE, convert = TRUE)
 
@@ -22,9 +22,7 @@ TL_merge$exposure <- "Telomere_length"
 TL_merge$p_val <- 10^-TL_merge$LP
 
 TL_gwas <- select(TL_merge, exposure,ID,CHROM,POS,ALT,REF,AF,ES,SE,p_val)
-
 colnames(TL_gwas)[c(2:10)] <- c("SNP","chr","position","ea","oa","eaf","b","se","p")
-
 write.table(TL_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\Telomere_length\\Telomere_length.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 
@@ -34,7 +32,6 @@ FA_vcf <- read.vcfR(path, verbose = FALSE)
 
 fix <- data.frame(FA_vcf@fix)
 gt <- data.frame(FA_vcf@gt)
-
 gt_sep <- separate(gt, "UKB.b.2148", into = c("ES","SE","LP","AF","ID"),
                    sep = ":", remove = TRUE, convert = TRUE)
 
@@ -45,9 +42,7 @@ FA_merge$exposure <- "Facial_aging"
 FA_merge$p_val <- 10^-FA_merge$LP
 
 FA_gwas <- select(FA_merge, exposure,ID,CHROM,POS,ALT,REF,AF,ES,SE,p_val)
-
 colnames(FA_gwas)[c(2:10)] <- c("SNP","chr","position","ea","oa","eaf","b","se","p")
-
 write.table(FA_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\Facial_aging\\Facial_aging.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 
