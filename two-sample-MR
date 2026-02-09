@@ -6,7 +6,7 @@ library(tidyr)
 library(dplyr)
 library(vroom)
 
-#**Pre-processing telomere length (TL) GWAS data**
+#**Pre-processing telomere length (TL) GWAS data
 path <- ("F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\Telomere_length\\ieu-b-4879.vcf.gz")
 TL_vcf <- read.vcfR(path, verbose = FALSE )
 
@@ -61,9 +61,7 @@ CHIP_txt$eaf <- CHIP_txt$EAFrq/100
 CHIP_txt$se <- abs(CHIP_txt$beta/ qnorm(CHIP_txt$P/2))
 
 CHIP_gwas <- select(CHIP_txt, exposure,rsID,Chr,PosB38,EA,OA,eaf,beta,se,P)
-
 colnames(CHIP_gwas)[2:10] <- c("SNP","chr","position","ea","oa","eaf","b","se","p")
-
 write.table(CHIP_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\Clonal_hematopoiesis\\Clonal_hematopoiesis.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 
@@ -72,11 +70,8 @@ path <- ("F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\PhenoAgeAccel\\phenoa
 PAA_txt <- vroom(path, col_names = TRUE)
 
 PAA_txt$exposure <- "Pheno_Age_Accel"
-
 PAA_gwas <- select(PAA_txt, exposure,SNP,CHR,BP,ALLELE1,ALLELE0,A1FREQ,BETA,SE,P_BOLT_LMM_INF)
-
 colnames(PAA_gwas)[2:10] <- c("SNP","chr","position","ea","oa","eaf","b","se","p")
-
 write.table(PAA_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\PhenoAgeAccel\\PhenoAgeAccel.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 
@@ -85,11 +80,8 @@ path <- ("F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\BioAgeAccel\\bioage.b
 BAA_txt <- vroom(path, col_names = TRUE)
 
 BAA_txt$exposure <- "Bio_Age_Accel"
-
 BAA_gwas <- select(BAA_txt, exposure,SNP,CHR,BP,ALLELE1,ALLELE0,A1FREQ,BETA,SE,P_BOLT_LMM_INF)
-
 colnames(BAA_gwas)[2:10] <- c("SNP","chr","position","ea","oa","eaf","b","se","p")
-
 write.table(BAA_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\BioAgeAccel\\BioAgeAccel.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 
@@ -98,12 +90,9 @@ path <- ("F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\EpiAgeAccel\\EEAA_met
 EEAA_csv <- vroom(path, col_names = TRUE)
 
 EEAA_csv$exposure <- "Extr_Epi_Age_Accel"
-
 EEAA_gwas <- select(EEAA_csv, exposure,SNP,Chr,bp,metaA1,metaA2,metaFreq,
                     meta_b,meta_se,metaPval)
-
 colnames(EEAA_gwas)[2:10] <- c("SNP","chr","position","ea","oa","eaf","b","se","p")
-
 write.table(EEAA_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\EpiAgeAccel\\Extr_Epi_Age_Accel.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 
@@ -112,12 +101,9 @@ path <- ("F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\EpiAgeAccel\\IEAA_met
 IEAA_csv <- vroom(path, col_names = TRUE)
 
 IEAA_csv$exposure <- "Intr_Epi_Age_Accel"
-
 IEAA_gwas <- select(IEAA_csv, exposure,SNP,Chr,bp,metaA1,metaA2,metaFreq,
                     meta_b,meta_se,metaPval)
-
 colnames(IEAA_gwas)[2:10] <- c("SNP","chr","position","ea","oa","eaf","b","se","p")
-
 write.table(IEAA_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\EpiAgeAccel\\Ixtr_Epi_Age_Accel.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 
@@ -130,14 +116,11 @@ colnames(FI_tsv)
 FI_gwas <- select(FI_tsv, exposure,variant_id,chromosome,base_pair_location,
                   effect_allele,other_allele,effect_allele_frequency,beta,
                   standard_error,p_value)
-
 colnames(FI_gwas)[2:10] <- c("SNP","chr","position","ea","oa","eaf","b","se","p")
-
 write.table(FI_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\Frailty_index\\Frailty_index.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 
-### MR main analysis
-# Exposure data preparation for MR analysis
+### Exposure data preparation for MR analysis
 library(TwoSampleMR)
 library(MRInstruments)
 
@@ -149,7 +132,6 @@ path_list <- list("F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\BioAgeAccel\
                   "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\Frailty_index\\Frailty_index.txt",
                   "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\PhenoAgeAccel\\PhenoAgeAccel.txt",
                   "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\Telomere_length\\Telomere_length.txt")
-
 name_list <- list("BioAgeAccel",
                   "Clonal_hematopoiesis",
                   "Extr_Epi_Age_Accel",
@@ -160,11 +142,9 @@ name_list <- list("BioAgeAccel",
                   "Telomere_length")
 
 for (i in 1:8) {gwas <- vroom(paste0(path_list[i]), col_names = TRUE)
-
-## Extract SNPs with genome-wide significance (P < 5e-08) from the exposure data.
+# Extract SNPs with genome-wide significance (P < 5e-08) from the exposure data.
 gwas_p <- subset(gwas, p < 5e-08 & eaf > 0.01)
-
-## format the exposure data.
+# format the exposure data.
 gwas_format <- format_data(gwas_p, type = "exposure",
                           snps = NULL,
                           header = TRUE,
@@ -189,15 +169,15 @@ gwas_format <- format_data(gwas_p, type = "exposure",
                           pos_col = "position",
                           log_pval = FALSE)
 
-## LD clumping locally
+# LD clumping locally
 library(ieugwasr)
 library(genetics.binaRies)
-## genetics.binaRies::get_plink_binary()
-## you should download Plink from
-## https://www.cog-genomics.org/plink/
-## and replace the Plink in the folder
-## "D:/software/R-4.3.1/library/genetics.binaRies/bin/plink.exe"
-## by that you downloaded
+# genetics.binaRies::get_plink_binary()
+# you should download Plink from
+# https://www.cog-genomics.org/plink/
+# and replace the Plink in the folder
+# "D:/software/R-4.3.1/library/genetics.binaRies/bin/plink.exe"
+# by that you downloaded
 gwas_ld <- dplyr::tibble(rsid=gwas_format$SNP, pval=gwas_format$pval.exposure, id=gwas_format$id.exposure)
 
 ld_result <- ld_clump(dat =  gwas_ld,
@@ -207,15 +187,14 @@ ld_result <- ld_clump(dat =  gwas_ld,
                       pop = "EUR",
                       plink_bin = genetics.binaRies::get_plink_binary(),
                       bfile = "F:/1000_gen_ref_panel/EUR")
-
 assign(toString(name_list[i]), gwas_format[which(gwas_format$SNP %in% ld_result$rsid),])
 }
 
+# Merge the processed exposure data (post-filtering and LD clumping) for the 8 aging phenotypes
 Aging_exposure_data <- rbind(BioAgeAccel, Clonal_hematopoiesis,
                              Extr_Epi_Age_Accel, Ixtr_Epi_Age_Accel,
                              Facial_aging, Frailty_index, PhenoAgeAccel,
                              Telomere_length)
-
 remove(list = setdiff(ls(),"Aging_exposure_data"))
 
 ## Calculate the strength of instruments (F statistics)
@@ -228,11 +207,10 @@ Aging_exposure_data$R_square <- (get_r_from_bsen(b = Aging_exposure_data$beta.ex
 Aging_exposure_data$F.Statistics <- (Aging_exposure_data$R_square/(1-Aging_exposure_data$R_square))*
   ((Aging_exposure_data$Sample.Size-2))
 
+# Filter to retain strong instrumental variables (F-statistics > 10) to avoid weak instrument bias
 Aging_expusure_data_F <- subset(Aging_exposure_data, F.Statistics > 10)
-
 write.csv(Aging_expusure_data_F, file = "F:\\research\\aging_PE_GTN\\data\\data_for_ana\\Aging_exposure_data_Fstatistics.csv",
           quote = FALSE, row.names = FALSE)
-
 
 # Mapping the SNPs of exposure to the outcome GWAS data
 Aging_exposure_data <- read.csv(file = "F:\\research\\aging_PE_GTN\\data\\data_for_ana\\Aging_exposure_data.csv",
@@ -252,7 +230,6 @@ PE_outcome_data <- read_outcome_data(snps = Aging_exposure_data$SNP,
                                   units_col = "Units",
                                   gene_col = "Gene",
                                   samplesize_col = "n")
-
 write.csv(PE_outcome_data, file = "F:\\research\\aging_PE_GTN\\data\\data_for_ana\\PE_outcome_data.csv",
           quote = FALSE, row.names = FALSE)
 
@@ -270,17 +247,14 @@ GTN_outcome_data <- read_outcome_data(snps = Aging_exposure_data$SNP,
                                      units_col = "Units",
                                      gene_col = "Gene",
                                      samplesize_col = "n")
-
 write.csv(GTN_outcome_data, file = "F:\\research\\aging_PE_GTN\\data\\data_for_ana\\GTN_outcome_data.csv",
           quote = FALSE, row.names = FALSE)
 
-# Main MR analysis for each exposure on PE and GTN
+### Main MR analysis for each exposure on PE and GTN
 Aging_exposure_data <- read.csv(file = "F:\\research\\aging_PE_GTN\\data\\data_for_ana\\Aging_exposure_data.csv",
                                 header = TRUE, sep = ",")
-
 PE_outcome_data <- read.csv(file = "F:\\research\\aging_PE_GTN\\data\\data_for_ana\\PE_outcome_data-EUR.csv",
                             header = TRUE, sep = ",")
-
 GTN_outcome_data <- read.csv(file = "F:\\research\\aging_PE_GTN\\data\\data_for_ana\\GTN_outcome_data-EUR.csv",
                              header = TRUE, sep = ",")
 
@@ -290,8 +264,7 @@ Aging_PE_dat <- harmonise_data(exposure_dat = Aging_exposure_data, outcome_dat =
 # To harmonize data (aging and GTN)
 Aging_GTN_dat <- harmonise_data(exposure_dat = Aging_exposure_data, outcome_dat = GTN_outcome_data)
 
-## MR analysis of aging on PE
-## method <- mr_method_list()
+# MR analysis of aging on PE
 Aging_PE_result <- generate_odds_ratios(
       mr_res = mr(Aging_PE_dat, method_list = c("mr_egger_regression",
                                               "mr_weighted_median",
@@ -299,16 +272,14 @@ Aging_PE_result <- generate_odds_ratios(
                                               "mr_ivw_fe",
                                               "mr_ivw_mre",
                                               "mr_wald_ratio")))
-
 write.csv(Aging_PE_result, file = "F:\\research\\aging_PE_GTN\\analysis_results\\table\\Aging_PE_result-EUR.csv",
           quote = FALSE, row.names = FALSE)
 
 egger_intercept_PE <- mr_pleiotropy_test(Aging_PE_dat)
-
 write.csv(egger_intercept_PE, file = "F:\\research\\aging_PE_GTN\\analysis_results\\table\\egger_intercept_PE-EUR.csv",
           quote = FALSE, row.names = FALSE)
 
-## MR analysis of aging on GTN
+# MR analysis of aging on GTN
 Aging_GTN_result <- generate_odds_ratios(
   mr_res = mr(Aging_GTN_dat, method_list = c("mr_egger_regression",
                                            "mr_weighted_median",
@@ -321,19 +292,14 @@ write.csv(Aging_GTN_result, file = "F:\\research\\aging_PE_GTN\\analysis_results
           quote = FALSE, row.names = FALSE)
 
 egger_intercept_GTN <- mr_pleiotropy_test(Aging_GTN_dat)
-
 write.csv(egger_intercept_GTN, file = "F:\\research\\aging_PE_GTN\\analysis_results\\table\\egger_intercept_GTN-EUR.csv",
           quote = FALSE, row.names = FALSE)
 
 
-
-## MR-PRESSO analysis for each aging exposure on PE
-
+### MR-PRESSO analysis for each aging exposure on PE
 data_list <- split(Aging_PE_dat, Aging_PE_dat$exposure)
-## Remove Extr_Epi_Age_Accel exposure, 
-## because this exposure included only one SNP
+# Remove extrinsic epigenetic age acceleration (EEAA) exposure, because this exposure included only one SNP
 data_list <- data_list[- 3] 
-
 PE_presso_output <- list("presso_PE_Bio_Age_Accel",
                          "presso_PE_Clonal_hematopoiesis",
                          "presso_PE_Facial_aging",
@@ -348,6 +314,7 @@ for (i in 1:7) {
          run_mr_presso(test, NbDistribution = 3000, SignifThreshold = 0.05))
 }
 
+# Main results of MR-PRESSO 
 Main_results_presso_PE <- rbind(
     data.frame(presso_PE_Bio_Age_Accel[[1]][["Main MR results"]]),
     data.frame(presso_PE_Clonal_hematopoiesis[[1]][["Main MR results"]]),
@@ -356,11 +323,10 @@ Main_results_presso_PE <- rbind(
     data.frame(presso_PE_Intr_Epi_Age_Accel[[1]][["Main MR results"]]),
     data.frame(presso_PE_Pheno_Age_Accel[[1]][["Main MR results"]]),
     data.frame(presso_PE_Telomere_length[[1]][["Main MR results"]]))
-
 write.csv(Main_results_presso_PE, file = "F:\\research\\aging_PE_GTN\\analysis_results\\table\\Main_results_presso_PE-EUR.csv",
           quote = FALSE, row.names = FALSE)
 
-
+# Global test results
 Global_test_presso_PE <- rbind(
 data.frame(presso_PE_Bio_Age_Accel[[1]][["MR-PRESSO results"]][["Global Test"]]),
 data.frame(presso_PE_Clonal_hematopoiesis[[1]][["MR-PRESSO results"]][["Global Test"]]),
@@ -369,36 +335,36 @@ data.frame(presso_PE_Frailty_index[[1]][["MR-PRESSO results"]][["Global Test"]])
 data.frame(presso_PE_Intr_Epi_Age_Accel[[1]][["MR-PRESSO results"]][["Global Test"]]),
 data.frame(presso_PE_Pheno_Age_Accel[[1]][["MR-PRESSO results"]][["Global Test"]]),
 data.frame(presso_PE_Telomere_length[[1]][["MR-PRESSO results"]][["Global Test"]]))
-
 write.csv(Global_test_presso_PE, file = "F:\\research\\aging_PE_GTN\\analysis_results\\table\\Global_test_presso_PE-EUR.csv",
           quote = FALSE, row.names = FALSE)
 
-
+# outlier identifying for each aging phenotype
 test1 <- data.frame(presso_PE_Bio_Age_Accel[[1]][["MR-PRESSO results"]][["Outlier Test"]])
   test1$exposure <- "Bio_Age_Accel"
+  ## outlier identified for BAA exposure
 test2 <- data.frame(presso_PE_Clonal_hematopoiesis[[1]][["MR-PRESSO results"]][["Outlier Test"]])
   ## No outlier identified for CHIP exposure
 test3 <- data.frame(presso_PE_Facial_aging[[1]][["MR-PRESSO results"]][["Outlier Test"]])
   test3$exposure <- "Facial_aging"
+  ## outlier identified for FA exposure
 test4 <- data.frame(presso_PE_Frailty_index[[1]][["MR-PRESSO results"]][["Outlier Test"]])
   ## No outlier identified for Frailty_index
 test5 <- data.frame(presso_PE_Intr_Epi_Age_Accel[[1]][["MR-PRESSO results"]][["Outlier Test"]])
   ## No outlier identified for Intr_Epi_Age_Accel
 test6 <- data.frame(presso_PE_Pheno_Age_Accel[[1]][["MR-PRESSO results"]][["Outlier Test"]])
   test6$exposure <- "Pheno_Age_Accel"
+  ## outlier identified for PAA exposure
 test7 <- data.frame(presso_PE_Telomere_length[[1]][["MR-PRESSO results"]][["Outlier Test"]])
   test7$exposure <- "Telomere_length"
+  ## outlier identified for TL exposure
 
 presso_PE_outlier <- rbind(test1, test3, test6, test7)
-
 write.csv(presso_PE_outlier, file = "F:\\research\\aging_PE_GTN\\analysis_results\\table\\presso_PE_outlier-EUR.csv",
           quote = FALSE, row.names = FALSE)
 
-## MR-PRESSO analysis for each aging exposure on GTN
-
+### MR-PRESSO analysis for each aging exposure on GTN
 data_list <- split(Aging_GTN_dat, Aging_GTN_dat$exposure)
-## Remove Extr_Epi_Age_Accel exposure, 
-## because this exposure included only one SNP
+## Remove extrinsic epigenetic age acceleration (EEAA) exposure, because this exposure included only one SNP
 data_list <- data_list[- 3] 
 
 GTN_presso_output <- list("presso_GTN_Bio_Age_Accel",
@@ -415,6 +381,7 @@ for (i in 1:7) {
          run_mr_presso(test, NbDistribution = 3000, SignifThreshold = 0.05))
 }
 
+# Main results of MR-PRESSO 
 Main_results_presso_GTN <- rbind(
   data.frame(presso_GTN_Bio_Age_Accel[[1]][["Main MR results"]]),
   data.frame(presso_GTN_Clonal_hematopoiesis[[1]][["Main MR results"]]),
@@ -423,10 +390,10 @@ Main_results_presso_GTN <- rbind(
   data.frame(presso_GTN_Intr_Epi_Age_Accel[[1]][["Main MR results"]]),
   data.frame(presso_GTN_Pheno_Age_Accel[[1]][["Main MR results"]]),
   data.frame(presso_GTN_Telomere_length[[1]][["Main MR results"]]))
-
 write.csv(Main_results_presso_GTN, file = "F:\\research\\aging_PE_GTN\\analysis_results\\table\\Main_results_presso_GTN-EUR.csv",
           quote = FALSE, row.names = FALSE)
 
+# Global test results
 Global_test_presso_GTN <- rbind(
   data.frame(presso_GTN_Bio_Age_Accel[[1]][["MR-PRESSO results"]][["Global Test"]]),
   data.frame(presso_GTN_Clonal_hematopoiesis[[1]][["MR-PRESSO results"]][["Global Test"]]),
@@ -435,28 +402,27 @@ Global_test_presso_GTN <- rbind(
   data.frame(presso_GTN_Intr_Epi_Age_Accel[[1]][["MR-PRESSO results"]][["Global Test"]]),
   data.frame(presso_GTN_Pheno_Age_Accel[[1]][["MR-PRESSO results"]][["Global Test"]]),
   data.frame(presso_GTN_Telomere_length[[1]][["MR-PRESSO results"]][["Global Test"]]))
-
 write.csv(Global_test_presso_GTN, file = "F:\\research\\aging_PE_GTN\\analysis_results\\table\\Global_test_presso_GTN-EUR.csv",
           quote = FALSE, row.names = FALSE)
 
+# outlier identifying for each aging phenotype
 test1 <- data.frame(presso_GTN_Bio_Age_Accel[[1]][["MR-PRESSO results"]][["Outlier Test"]])
-test1$exposure <- "Bio_Age_Accel"
+  test1$exposure <- "Bio_Age_Accel"
+  ## outlier identified for BAA exposure
 test2 <- data.frame(presso_GTN_Clonal_hematopoiesis[[1]][["MR-PRESSO results"]][["Outlier Test"]])
-## No outlier identified for CHIP exposure
+  ## No outlier identified for CHIP exposure
 test3 <- data.frame(presso_GTN_Facial_aging[[1]][["MR-PRESSO results"]][["Outlier Test"]])
-## No outlier identified for Facial_aging
+  ## No outlier identified for Facial_aging
 test4 <- data.frame(presso_GTN_Frailty_index[[1]][["MR-PRESSO results"]][["Outlier Test"]])
-## No outlier identified for Frailty_index
+  ## No outlier identified for Frailty_index
 test5 <- data.frame(presso_GTN_Intr_Epi_Age_Accel[[1]][["MR-PRESSO results"]][["Outlier Test"]])
-## No outlier identified for Intr_Epi_Age_Accel
+  ## No outlier identified for Intr_Epi_Age_Accel
 test6 <- data.frame(presso_GTN_Pheno_Age_Accel[[1]][["MR-PRESSO results"]][["Outlier Test"]])
-test6$exposure <- "Pheno_Age_Accel"
+  test6$exposure <- "Pheno_Age_Accel"
+  ## outlier identified for PAA exposure
 test7 <- data.frame(presso_GTN_Telomere_length[[1]][["MR-PRESSO results"]][["Outlier Test"]])
-## No outlier identified for Telomere_length
+  ## No outlier identified for Telomere_length
 
 presso_GTN_outlier <- rbind(test1, test6)
-
 write.csv(presso_GTN_outlier, file = "F:\\research\\aging_PE_GTN\\analysis_results\\table\\presso_GTN_outlier-EUR.csv",
           quote = FALSE, row.names = FALSE)
-
-remove(list = setdiff(ls(),c("Aging_PE_dat","Aging_GTN_dat")))
