@@ -1,12 +1,12 @@
 
-# Pre-processing exposure data ----------------------------------
+# Pre-processing exposure data
 ### Convert the format of exposure data, for example, vcf to txt etc.
 ### Change the variable name of exposed data to a unified ones.
 library(vcfR)
 library(tidyr)
 library(dplyr)
 library(vroom)
-#** Pre-processing telomere length (TL) GWAS data--------------------------------
+#** Pre-processing telomere length (TL) GWAS data
 path <- ("F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\Telomere_length\\ieu-b-4879.vcf.gz")
 TL_vcf <- read.vcfR(path, verbose = FALSE )
 
@@ -29,7 +29,7 @@ colnames(TL_gwas)[c(2:10)] <- c("SNP","chr","position","ea","oa","eaf","b","se",
 write.table(TL_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\Telomere_length\\Telomere_length.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 
-#** Pre-processing facial aging (FA) GWAS data-----------------------------------
+#** Pre-processing facial aging (FA) GWAS data
 path <- ("F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\Facial_aging\\ukb-b-2148.vcf.gz")
 FA_vcf <- read.vcfR(path, verbose = FALSE)
 
@@ -52,7 +52,7 @@ colnames(FA_gwas)[c(2:10)] <- c("SNP","chr","position","ea","oa","eaf","b","se",
 write.table(FA_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\Facial_aging\\Facial_aging.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 
-#** Pre-processing clonal hematopoiesis (CH) GWAS data---------------------------
+#** Pre-processing clonal hematopoiesis (CH) GWAS data
 path <- ("F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\CHIP_decode\\ClonalHematopoiesis_All.txt")
 CHIP_txt <- vroom(path, col_names = TRUE)
 
@@ -73,7 +73,7 @@ colnames(CHIP_gwas)[2:10] <- c("SNP","chr","position","ea","oa","eaf","b","se","
 write.table(CHIP_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\Clonal_hematopoiesis\\Clonal_hematopoiesis.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 
-#** Pre-processing phenotypic age acceleration (PAA) GWAS data ---------------------------
+#** Pre-processing phenotypic age acceleration (PAA) GWAS data
 path <- ("F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\PhenoAgeAccel\\phenoage.bolt.imputed.qc.txt")
 PAA_txt <- vroom(path, col_names = TRUE)
 
@@ -86,7 +86,7 @@ colnames(PAA_gwas)[2:10] <- c("SNP","chr","position","ea","oa","eaf","b","se","p
 write.table(PAA_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\PhenoAgeAccel\\PhenoAgeAccel.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 
-#** Pre-processing biological age acceleration (BAA) GWAS data ---------------------------
+#** Pre-processing biological age acceleration (BAA) GWAS data
 path <- ("F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\BioAgeAccel\\bioage.bolt.imputed.qc.txt")
 BAA_txt <- vroom(path, col_names = TRUE)
 
@@ -99,7 +99,7 @@ colnames(BAA_gwas)[2:10] <- c("SNP","chr","position","ea","oa","eaf","b","se","p
 write.table(BAA_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\BioAgeAccel\\BioAgeAccel.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 
-#** Pre-processing extrinsic epigenetic age acceleration (EEAA) GWAS data ------------------
+#** Pre-processing extrinsic epigenetic age acceleration (EEAA) GWAS data
 path <- ("F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\EpiAgeAccel\\EEAA_metaPlusGS.csv")
 EEAA_csv <- vroom(path, col_names = TRUE)
 
@@ -113,7 +113,7 @@ colnames(EEAA_gwas)[2:10] <- c("SNP","chr","position","ea","oa","eaf","b","se","
 write.table(EEAA_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\EpiAgeAccel\\Extr_Epi_Age_Accel.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 
-#** Pre-processing intrinsic epigenetic age acceleration (IEAA) GWAS data ------------------
+#** Pre-processing intrinsic epigenetic age acceleration (IEAA) GWAS data
 path <- ("F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\EpiAgeAccel\\IEAA_metaPlusGS.csv")
 IEAA_csv <- vroom(path, col_names = TRUE)
 
@@ -127,7 +127,7 @@ colnames(IEAA_gwas)[2:10] <- c("SNP","chr","position","ea","oa","eaf","b","se","
 write.table(IEAA_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\EpiAgeAccel\\Ixtr_Epi_Age_Accel.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 
-#** Pre-processing frailty index (FI) GWAS data ------------------
+#** Pre-processing frailty index (FI) GWAS data
 path <- ("F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\Frailty_index\\GCST90020053_buildGRCh37.tsv")
 FI_tsv <- vroom(path, col_names = TRUE)
 
@@ -143,7 +143,7 @@ write.table(FI_gwas, "F:\\research\\aging_PE_GTN\\data\\exposure_gwas\\Frailty_i
             sep = "\t", quote = FALSE, row.names = FALSE)
 
 ### MR main analysis
-# Exposure data preparation for MR analysis ----------------
+# Exposure data preparation for MR analysis
 library(TwoSampleMR)
 library(MRInstruments)
 
@@ -240,7 +240,7 @@ write.csv(Aging_expusure_data_F, file = "F:\\research\\aging_PE_GTN\\data\\data_
           quote = FALSE, row.names = FALSE)
 
 
-# Mapping the SNPs of exposure to the outcome GWAS data --------------
+# Mapping the SNPs of exposure to the outcome GWAS data
 Aging_exposure_data <- read.csv(file = "F:\\research\\aging_PE_GTN\\data\\data_for_ana\\Aging_exposure_data.csv",
                                 header = TRUE, sep = ",")
 
@@ -280,7 +280,7 @@ GTN_outcome_data <- read_outcome_data(snps = Aging_exposure_data$SNP,
 write.csv(GTN_outcome_data, file = "F:\\research\\aging_PE_GTN\\data\\data_for_ana\\GTN_outcome_data.csv",
           quote = FALSE, row.names = FALSE)
 
-# Main MR analysis for each exposure on PE and GTN ----------------
+# Main MR analysis for each exposure on PE and GTN
 Aging_exposure_data <- read.csv(file = "F:\\research\\aging_PE_GTN\\data\\data_for_ana\\Aging_exposure_data.csv",
                                 header = TRUE, sep = ",")
 
@@ -333,7 +333,7 @@ write.csv(egger_intercept_GTN, file = "F:\\research\\aging_PE_GTN\\analysis_resu
 
 
 
-## MR-PRESSO analysis for each aging exposure on PE -----------
+## MR-PRESSO analysis for each aging exposure on PE
 
 data_list <- split(Aging_PE_dat, Aging_PE_dat$exposure)
 ## Remove Extr_Epi_Age_Accel exposure, 
@@ -400,7 +400,7 @@ presso_PE_outlier <- rbind(test1, test3, test6, test7)
 write.csv(presso_PE_outlier, file = "F:\\research\\aging_PE_GTN\\analysis_results\\table\\presso_PE_outlier-EUR.csv",
           quote = FALSE, row.names = FALSE)
 
-## MR-PRESSO analysis for each aging exposure on GTN -----------
+## MR-PRESSO analysis for each aging exposure on GTN
 
 data_list <- split(Aging_GTN_dat, Aging_GTN_dat$exposure)
 ## Remove Extr_Epi_Age_Accel exposure, 
