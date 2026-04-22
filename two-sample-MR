@@ -296,6 +296,105 @@ write.csv(egger_intercept_GTN, file = "F:/research/aging_PE_GTN/analysis_results
           quote = FALSE, row.names = FALSE)
 
 
+# Heterogeneity analysis for aging and PE
+PE_htest <- mr_heterogeneity(
+  Aging_PE_dat,
+  parameters = default_parameters(),
+  method_list = subset(mr_method_list(), heterogeneity_test & use_by_default)$obj
+)
+PE_htest <- transform(
+  subset(PE_htest[order(PE_htest$exposure),], method == "Inverse variance weighted", select = -c(id.exposure, id.outcome)),
+  outcome = "PE",
+  Q = round(Q, 3),
+  Q_pval = formatC(Q_pval, format = "e", digits = 3)
+)
+
+# Heterogeneity analysis for aging and GH
+GH_htest <- mr_heterogeneity(
+  Aging_GTN_dat,
+  parameters = default_parameters(),
+  method_list = subset(mr_method_list(), heterogeneity_test & use_by_default)$obj
+)
+GH_htest <- transform(
+  subset(GH_htest[order(GH_htest$exposure),], method == "Inverse variance weighted", select = -c(id.exposure, id.outcome)),
+  outcome = "GH",
+  Q = round(Q, 3),
+  Q_pval = formatC(Q_pval, format = "e", digits = 3)
+)
+
+res_htest <- rbind(PE_htest, GH_htest)
+write.csv(res_htest, file = "F:/research/aging_PE_GTN/analysis_results/table/result_htest.csv",
+          quote = FALSE, row.names = FALSE)
+
+
+# MR Steiger Test of Directionality for biological aging and PE
+names(Aging_PE_dat)[names(Aging_PE_dat) == "Sample.Size"] <- "samplesize.exposure"
+Aging_PE_dat$samplesize.outcome <- 611484
+dir_test_pe <- directionality_test(Aging_PE_dat)
+dir_test_pe <- transform(
+  subset(dir_test_pe[order(dir_test_pe$exposure),], select = -c(id.exposure, id.outcome)),
+  outcome = "PE",
+  snp_r2.exposure = round(snp_r2.exposure, 3),
+  snp_r2.outcome = formatC(snp_r2.outcome, format = "e", digits = 3),
+  steiger_pval = formatC(steiger_pval, format = "e", digits = 3)
+)
+
+sfSNPs_pe <- steiger_filtering(Aging_PE_dat)
+sfSNPs_pe <- transform(
+    subset(sfSNPs_pe[order(sfSNPs_pe$exposure),], select = c(
+      SNP, exposure, outcome, rsq.exposure, rsq.outcome, steiger_dir, steiger_pval)),
+    PE.out = "PE",
+    PE.steiger_dir = steiger_dir,
+    PE.rsq.exposure = formatC(rsq.exposure, format = "e", digits = 3),
+    PE.rsq.outcome = formatC(rsq.outcome, format = "e", digits = 3),
+    PE.steiger_pval = formatC(steiger_pval, format = "e", digits = 3),
+    outcome = NULL,
+    steiger_dir = NULL,
+    rsq.exposure = NULL,
+    rsq.outcome = NULL,
+    steiger_pval = NULL
+)
+table(sfSNPs_pe$steiger_dir)
+
+# MR Steiger Test of Directionality for biological aging and GH
+names(Aging_GTN_dat)[names(Aging_GTN_dat) == "Sample.Size"] <- "samplesize.exposure"
+Aging_GTN_dat$samplesize.outcome <- 398472
+dir_test_gh <- directionality_test(Aging_GTN_dat)
+dir_test_gh <- transform(
+  subset(dir_test_gh[order(dir_test_gh$exposure),], select = -c(id.exposure, id.outcome)),
+  outcome = "GH",
+  snp_r2.exposure = round(snp_r2.exposure, 3),
+  snp_r2.outcome = formatC(snp_r2.outcome, format = "e", digits = 3),
+  steiger_pval = formatC(steiger_pval, format = "e", digits = 3)
+)
+
+sfSNPs_gh <- steiger_filtering(Aging_GTN_dat)
+sfSNPs_gh <- transform(
+    subset(sfSNPs_gh[order(sfSNPs_gh$exposure),], select = c(
+      SNP, exposure, outcome, rsq.exposure, rsq.outcome, steiger_dir, steiger_pval)),
+    GH.out = "GH",
+    GH.steiger_dir = steiger_dir,
+    GH.rsq.exposure = formatC(rsq.exposure, format = "e", digits = 3),
+    GH.rsq.outcome = formatC(rsq.outcome, format = "e", digits = 3),
+    GH.steiger_pval = formatC(steiger_pval, format = "e", digits = 3),
+    outcome = NULL,
+    steiger_dir = NULL,
+    rsq.exposure = NULL,
+    rsq.outcome = NULL,
+    steiger_pval = NULL
+)
+table(sfSNPs_gh$steiger_dir)
+
+res_dir_test <- rbind(dir_test_pe, dir_test_gh)
+res_sfSNPs <- merge(sfSNPs_pe, sfSNPs_gh, by = c("SNP", "exposure"))
+res_sfSNPs <- res_sfSNPs[order(res_sfSNPs$exposure,res_sfSNPs$SNP),]
+
+write.csv(res_dir_test, file = "F:/research/aging_PE_GTN/analysis_results/table/res_direction_test.csv",
+          quote = FALSE, row.names = FALSE)
+write.csv(res_sfSNPs, file = "F:/research/aging_PE_GTN/analysis_results/table/res_steiger_filter_SNPs.csv",
+          quote = FALSE, row.names = FALSE)
+
+
 ### MR-PRESSO analysis for each aging exposure on PE
 data_list <- split(Aging_PE_dat, Aging_PE_dat$exposure)
 # Remove extrinsic epigenetic age acceleration (EEAA) exposure, because this exposure included only one SNP
